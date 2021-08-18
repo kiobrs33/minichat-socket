@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Socket IO</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Mini Chat</h1>
+        <hr>
+
+        <form id="formChat" class="form-chat">
+            <input type="text" id="txtSms" class="form-chat__input" placeholder="Mensaje">
+            <button class="form-chat__button" type="submit">Enviar</button>
+        </form>
+
+        <div>
+            <ul id="mySms">
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+    <script>
+
+        const socket = io('http://localhost:8080');
+
+        const form = document.querySelector('#formChat');
+        const mySms = document.querySelector('#mySms');
+        const txtSms = document.querySelector('#txtSms');
+
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+
+            const menssage = txtSms.value;
+
+            socket.emit('message-client', { sms: menssage });
+        });
+
+        socket.on('welcome-client', (data) => {
+            console.log(data);
+        });
+
+        socket.on('message-server', (data) => {
+            mySms.innerHTML += `<li>${data.sms}</li>`
+        });
+
+    </script>
+</body>
+</html>
